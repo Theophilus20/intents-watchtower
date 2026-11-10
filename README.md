@@ -17,6 +17,36 @@ Track: **Open Innovation** (also fits AI Security & Defense and Agent Economy) Â
 
 ---
 
+## For judges: try it in five minutes
+
+Each row is one action and what you should see. The first needs nothing installed; the rest need Node 20 or newer.
+
+| Do | See |
+|---|---|
+| Open https://www.intentswatchtower.xyz | The live status page: 12 routes with verdicts read from the NEAR contract, "Watchers agreeing 3 of 3", and the backing of each bridged asset read from its home chain by your browser |
+| Run the `curl` command under [Live right now](#live-right-now) | JSON from the contract on NEAR: every route with its status, reasons, safe size and report hash |
+| `npm install --legacy-peer-deps` then `npm test` | `208 passed` |
+| `npm run demo` | The 1 October replay. Look for `T+4m â— RED 3 routes` and `$3.63M (97.6%) moved after Watchtower was red` |
+| `npm run cli -- agent-demo` | An agent asked to move $25,000 is refused the red route and `rerouted to usdc:ethereum->sol:solana` |
+| `npm run app`, then open `apps/status/dist/site/index.html` | The same status page offline, in replay mode: press play and watch the route turn red |
+| `npm run test:contract` (needs Rust) | 35 contract tests pass, including Rust verifying signatures made in TypeScript |
+
+### How NEAR fits in
+
+- **The verdicts live in a NEAR smart contract** (`contracts/watchtower`, Rust, near-sdk). It verifies each watcher's ed25519 signature, requires a quorum, turns red fast and green slowly, and stores one verdict per route.
+- **Anyone can read it for free.** `is_safe(route)` and `check_intent(route, amount)` are view calls, so a wallet, a contract or an AI agent can ask before it sends.
+- **What it watches is NEAR Intents.** The watchers read the supply of bridged tokens on NEAR mainnet and compare it with the bridge treasuries on Bitcoin, Ethereum, Solana, BNB Chain and Litecoin.
+- **Testnet and mainnet.** The verdict contract is on NEAR testnet (`watchtower.intentswatch-ade.testnet`). All the data it judges is read from mainnet.
+
+### Disclosures
+
+- **When it was built:** all of the code was written during the hackathon window (19 October to 14 November 2026). There is no earlier baseline.
+- **AI assistance:** the code was written with an AI coding assistant (Claude), directed, run and checked by the team.
+- **Libraries:** near-sdk (contract); near-api-js, @noble/ed25519, @noble/hashes, preact, @electric-sql/pglite (apps and packages); esbuild, tsx, TypeScript, vitest, jsdom (build and tests); ed25519-dalek, serde_json, hex (contract tests).
+- **Simulations:** the incident replays are simulations modelled on public reports, not recordings of the real events. The live page and the figures under "Live right now" are real.
+
+---
+
 ## What is in this repo
 
 | Part | Path | State |

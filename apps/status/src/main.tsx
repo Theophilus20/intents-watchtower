@@ -306,6 +306,29 @@ function useReplay(scenarioId: string | null) {
   return { state: s, ...api };
 }
 
+const BACKING_CACHE = "wt-backing-v1";
+/** The last backing reading saved in this browser (at most a day old), or null. Storage can be blocked: then null. */
+function loadBackingCache(contractId: string | undefined): { backing: Map<string, AssetBacking>; atMs: number } | null {
+  if (!contractId) return null;
+  try {
+    const raw = JSON.parse(localStorage.getItem(BACKING_CACHE) ?? "null") as { contractId: string; atMs: number; items: (Omit<AssetBacking, "owed" | "held" | "short"> & { owed?: string; held?: string; short?: string })[] } | null;
+    if (!raw || raw.contractId !== contractId || Date.now() - raw.atMs > 86_400_000 || !Array.isArray(raw.items)) return null;
+    const big = (v?: string) => (v === undefined ? undefined : BigInt(v));
+    return { atMs: raw.atMs, backing: new Map(raw.items.map((i) => [i.asset, { ...i, owed: big(i.owed), held: big(i.held), short: big(i.short) }])) };
+  } catch {
+    return null;
+  }
+}
+function saveBackingCache(contractId: string, backing: Map<string, AssetBacking>): void {
+  try {
+    if (![...backing.values()].some((b) => b.ppm !== null)) return; // nothing was read: keep the older reading
+    const items = [...backing.values()].map((b) => ({ ...b, owed: b.owed?.toString(), held: b.held?.toString(), short: b.short?.toString() }));
+    localStorage.setItem(BACKING_CACHE, JSON.stringify({ contractId, atMs: Date.now(), items }));
+  } catch {
+    /* storage unavailable: the page works without it */
+  }
+}
+
 function backingNoteText(n: NonNullable<Snapshot["backingNote"]>): string {
   if (n.kind === "missing") return t("This page was built without the bridges' wallet list, so it can't check backing itself. Build it from the intents-watchtower folder with WATCHTOWER_LIVE set.");
   if (n.kind === "checking") return t("Checking each bridge's backing from the chains…");
@@ -356,8 +379,10 @@ function useLive(src: LiveSource | null) {
   }, [src?.network, src?.contractId]);
 
   // Backing, read by the page itself from the chains every 2 minutes (gentle on free endpoints).
-  const [backing, setBacking] = useState<Map<string, AssetBacking> | null>(null);
-  const [backingAt, setBackingAt] = useState<number | null>(null);
+  // The last reading is kept in the browser, so a returning visitor sees numbers at once while the fresh check runs.
+  const cached = useMemo(() => loadBackingCache(src?.contractId), [src?.contractId]);
+  const [backing, setBacking] = useState<Map<string, AssetBacking> | null>(cached?.backing ?? null);
+  const [backingAt, setBackingAt] = useState<number | null>(cached?.atMs ?? null);
   const [heads, setHeads] = useState<Map<string, number> | null>(null);
   useEffect(() => {
     const proof = PROOF;
@@ -366,7 +391,7 @@ function useLive(src: LiveSource | null) {
     const read = async () => {
       try {
         const [b, h] = await Promise.all([readBacking(proof), readHeads(proof)]);
-        if (alive) { setBacking(b); setBackingAt(Date.now()); setHeads(h); }
+        if (alive) { setBacking(b); setBackingAt(Date.now()); setHeads(h); saveBackingCache(src.contractId, b); }
       } catch {
         /* keep the last reading */
       }
@@ -470,7 +495,7 @@ function Verdict({ snap, context }: { snap: Snapshot; context: ComponentChildren
         <div>
           <dt>{t("Lowest backing")}</dt>
           <dd class={snap.lowestBacking && snap.lowestBacking.ppm < 995_000 ? "t-red" : snap.lowestBacking && snap.lowestBacking.ppm < 1_000_000 ? "t-amber" : ""}>
-            {snap.lowestBacking ? fmtBacking(snap.lowestBacking.ppm) : t("n/a")}
+            {snap.lowestBacking ? fmtBacking(snap.lowestBacking.ppm) : snap.backingNote?.kind === "checking" ? <i class="skel skel-num" aria-label={t("Checking each bridge's backing from the chains…")} /> : t("n/a")}
             {snap.lowestBacking && <span class="sub">{assetName(snap.lowestBacking.asset)}</span>}
           </dd>
         </div>
@@ -479,7 +504,7 @@ function Verdict({ snap, context }: { snap: Snapshot; context: ComponentChildren
           <div>
             <dt>{t("Bridged assets fully backed")}</dt>
             <dd class={snap.backed && snap.backed.short.length ? "t-amber" : ""}>
-              {snap.backed ? <>{snap.backed.full} <span>{t("of {n}", { n: snap.backed.total })}</span></> : t("n/a")}
+              {snap.backed ? <>{snap.backed.full} <span>{t("of {n}", { n: snap.backed.total })}</span></> : snap.backingNote?.kind === "checking" ? <i class="skel skel-num" aria-hidden="true" /> : t("n/a")}
               {snap.backed && snap.backed.short.length > 0 && <span class="sub">{t("Short: {list}", { list: snap.backed.short.map((a) => a.split(":")[0]!.toUpperCase()).join(", ") })}</span>}
             </dd>
           </div>
@@ -580,7 +605,7 @@ function RouteTable({ snap, history, selected, onSelect }: { snap: Snapshot; his
               </span>
               <span role="cell"><Badge status={r.status} /></span>
               <span role="cell" class={`num col-size${r.capacityUsd === 0 ? (r.status === "red" ? " is-blocked" : " is-held") : ""}`}>{r.capacityUsd === 0 ? t("Blocked") : dollarsShort(r.capacityUsd)}</span>
-              <span role="cell" class={`num col-backing ${r.backingPpm !== null && r.backingPpm < 995_000 ? "t-red" : ""}`} title={r.backingError ? t("Couldn't read {list}: {why}", { list: r.backingError.split(":")[0]!, why: r.backingError.slice(r.backingError.indexOf(":") + 1).trim().slice(0, 160) }) : undefined}>{fmtBacking(r.backingPpm)}</span>
+              <span role="cell" class={`num col-backing ${r.backingPpm !== null && r.backingPpm < 995_000 ? "t-red" : ""}`} title={r.backingError ? t("Couldn't read {list}: {why}", { list: r.backingError.split(":")[0]!, why: r.backingError.slice(r.backingError.indexOf(":") + 1).trim().slice(0, 160) }) : undefined}>{r.backingPpm === null && snap.backingNote?.kind === "checking" ? <i class="skel skel-cell" aria-hidden="true" /> : fmtBacking(r.backingPpm)}</span>
               <span role="cell" class="col-trend"><Spark values={history(r.route)} status={r.status} /></span>
               <span class="rt-chev" aria-hidden="true"><IChevronRight size={16} /></span>
             </button>

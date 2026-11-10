@@ -517,6 +517,9 @@ a { color: var(--accent); }
 .foot span { max-width: 80ch; }
 .skel { border-radius: var(--r-lg); background: linear-gradient(90deg, var(--sunk), var(--raised), var(--sunk)); background-size: 200% 100%; animation: shimmer 1.4s linear infinite; }
 .skel-hero { height: 150px; }
+.skel-num { display: inline-block; width: 4.2em; height: .95em; border-radius: 6px; vertical-align: middle; }
+.skel-cell { display: inline-block; width: 3.6em; height: .9em; border-radius: 5px; vertical-align: middle; }
+@media (prefers-reduced-motion: reduce) { .skel { animation: none; } }
 .skel-table { height: 420px; }
 @keyframes shimmer { to { background-position: -200% 0; } }
 @keyframes rise { from { transform: translateY(24px); opacity: 0; } }

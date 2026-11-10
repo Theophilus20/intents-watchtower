@@ -61,7 +61,9 @@ Read the contract yourself, with no setup:
 curl -s https://test.rpc.fastnear.com -H 'content-type: application/json' -d '{"jsonrpc":"2.0","id":1,"method":"query","params":{"request_type":"call_function","finality":"final","account_id":"watchtower.intentswatch-ade.testnet","method_name":"list_routes","args_base64":"e30="}}'
 ```
 
-The hosted status page builds from this repo on Vercel (`vercel.json`): it opens on that contract and re-checks every treasury itself in your browser, from the public wallet list in `config/public.config.json`.
+**Live status page: https://www.intentswatchtower.xyz**
+
+It builds from this repo on Vercel (`vercel.json`): it opens on that contract and re-checks every treasury itself in your browser, from the public wallet list in `config/public.config.json`.
 
 ---
 

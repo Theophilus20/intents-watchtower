@@ -35,7 +35,7 @@ const stats = [1, 2, 3].map((n) => ({ n, starts: 0, lastLineAt: 0 }));
 let stopping = false;
 function start(s: (typeof stats)[number]): void {
   s.starts++;
-  const child = spawn("tsx", ["packages/watcher/src/cli.ts", "run", "--config", "watchtower.config.json", "--submit", "--watcher", String(s.n)], { env: { ...process.env, ...(bundle.env ?? {}), WATCHTOWER_BUNDLE: "" }, stdio: ["ignore", "pipe", "pipe"] });
+  const child = spawn("tsx", ["packages/watcher/src/cli.ts", "run", "--config", "watchtower.config.json", "--submit", "--watcher", String(s.n)], { env: { ...(bundle.env ?? {}), ...process.env, WATCHTOWER_BUNDLE: "" }, stdio: ["ignore", "pipe", "pipe"] });
   const relay = (chunk: Buffer) => {
     s.lastLineAt = Date.now();
     for (const line of chunk.toString("utf8").split("\n")) if (line.trim()) console.log(`[w${s.n}] ${line}`);

@@ -32,7 +32,7 @@ import { findOrigin, printOrigin } from "./origin.ts";
 import { DEFAULT_LIVE } from "./doctor.ts";
 
 /** Printed by the custody finder, so its output shows which version produced it. */
-const BUILD = "2026-11-10.2";
+const BUILD = "2026-11-10.3";
 import { openPglite } from "@watchtower/store";
 import { sendTelegram } from "@watchtower/bot";
 
@@ -191,7 +191,9 @@ async function runLive(): Promise<void> {
   const refreshEpochs = Number(process.env.WATCHTOWER_REFRESH_MINUTES ?? (file.rpcUrl?.includes("mainnet") ? 10 : 4));
   const node = new WatcherNode({ watcherId, secretKey, contractId: file.contractId, config: cfg, submitter, state: saved, refreshEpochs });
   if (submitter) console.log(dim(`submitting to ${file.contractId}; unchanged routes re-confirmed every ${refreshEpochs} min, changes immediately`));
-  if (process.env.FASTNEAR_API_KEY) file.live.near = { ...file.live.near, apiKey: process.env.FASTNEAR_API_KEY };
+  // FASTNEAR_API_KEY=off runs on the free public endpoints even if the config holds a key (no credits spent).
+  if (process.env.FASTNEAR_API_KEY === "off") { if (file.live.near) delete (file.live.near as { apiKey?: string }).apiKey; }
+  else if (process.env.FASTNEAR_API_KEY) file.live.near = { ...file.live.near, apiKey: process.env.FASTNEAR_API_KEY };
   // --data-mb N: how much NEAR block data a round may download (default 1 MB, about 1.4 GB a day).
   const dataMb = Number(flag("data-mb", process.env.WATCHTOWER_DATA_MB ?? "")) || file.live.indexBudgetMb;
   if (dataMb) file.live.indexBudgetMb = dataMb;

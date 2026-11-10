@@ -1,0 +1,9 @@
+node_modules
+**/node_modules
+.git
+data
+watchtower.config.json
+*.bak
+.env
+**/dist
+contracts/watchtower/target

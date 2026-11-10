@@ -4,7 +4,7 @@ services:
   watcher-1: &watcher
     build: .
     restart: unless-stopped
-    command: ["run", "--config", "/config/watchtower.config.json", "--submit"]
+    command: ["tsx", "packages/watcher/src/cli.ts", "run", "--config", "/config/watchtower.config.json", "--submit"]
     volumes: ["./watchtower.config.json:/config/watchtower.config.json:ro", "./data/w1:/data"]
     environment:
       WATCHER_ACCOUNT_ID: ${W1_ACCOUNT_ID}

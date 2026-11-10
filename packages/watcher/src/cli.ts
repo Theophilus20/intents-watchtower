@@ -32,7 +32,7 @@ import { findOrigin, printOrigin } from "./origin.ts";
 import { DEFAULT_LIVE } from "./doctor.ts";
 
 /** Printed by the custody finder, so its output shows which version produced it. */
-const BUILD = "2026-11-10.1";
+const BUILD = "2026-11-10.2";
 import { openPglite } from "@watchtower/store";
 import { sendTelegram } from "@watchtower/bot";
 

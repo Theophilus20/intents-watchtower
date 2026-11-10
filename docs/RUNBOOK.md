@@ -100,3 +100,17 @@ Until an asset's custody set is complete, leave it out of `assets`; routes touch
 
 - `npm run replay -- all --json data/replays.json` writes every frame and transition.
 - Any stored verdict can be re-verified: `PgStore.storedReport(route, epoch)` + `verifyVerdict(...)` recomputes the hash that watchers signed.
+
+## Running in the cloud
+
+One container can run all three watchers, so the status page stays fresh when your computer is off.
+
+1. On the computer that holds the keys, run `npm run cloud:bundle`. It packs `watchtower.config.json`, the three
+   watcher keys and the relayer key into one value in `data/cloud-bundle.txt`. Treat that file like the keys.
+2. On the host (Railway, Fly or any container host), deploy this repository. It builds from the `Dockerfile`.
+3. Add one secret variable, `WATCHTOWER_BUNDLE`, and paste the file's contents as its value.
+4. Stop the watchers on your computer, so only one copy of each signs.
+
+The service restores the files, starts watcher 1, 2 and 3 twenty seconds apart and restarts any that stops. Its log
+prefixes each line with `[w1]`, `[w2]` or `[w3]`. This is the demo arrangement: in production each watcher runs on a
+different machine, operated by a different person.

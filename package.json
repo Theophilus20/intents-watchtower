@@ -45,7 +45,9 @@
     "relayer": "tsx packages/watcher/src/cli.ts relayer",
     "custody": "tsx packages/watcher/src/cli.ts custody",
     "custody:apply": "tsx packages/watcher/src/cli.ts custody --apply",
-    "config:public": "tsx scripts/public-config.ts"
+    "config:public": "tsx scripts/public-config.ts",
+    "cloud:bundle": "tsx scripts/cloud-bundle.ts",
+    "cloud": "tsx scripts/cloud.ts"
   },
   "devDependencies": {
     "@types/jsdom": "^30.0.0",

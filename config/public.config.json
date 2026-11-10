@@ -1,0 +1,127 @@
+{
+  "_comment": "Public wallet list for the hosted status page. Made by npm run config:public. Contains no keys.",
+  "contractId": "watchtower.intentswatch-ade.testnet",
+  "live": {
+    "chains": {
+      "bitcoin": {
+        "kind": "esplora",
+        "url": "https://mempool.space/api"
+      },
+      "ethereum": {
+        "kind": "evm",
+        "url": "https://ethereum-rpc.publicnode.com"
+      },
+      "bsc": {
+        "kind": "evm",
+        "url": "https://bsc-rpc.publicnode.com"
+      },
+      "solana": {
+        "kind": "solana",
+        "url": "https://api.mainnet-beta.solana.com"
+      },
+      "litecoin": {
+        "kind": "esplora",
+        "url": "https://litecoinspace.org/api"
+      }
+    },
+    "assets": {
+      "btc:bitcoin": {
+        "custody": [
+          "1C6XJtNXiuXvk4oUAVMkKF57CRpaTrN5Ra"
+        ],
+        "hotWallets": [
+          "1C6XJtNXiuXvk4oUAVMkKF57CRpaTrN5Ra"
+        ],
+        "nearContract": "btc.omft.near",
+        "issuerAccounts": [
+          "btc.omft.near",
+          "omft.near"
+        ],
+        "partial": {
+          "baselineGap": "221203695",
+          "smallGap": "4365016",
+          "alarmGap": "7818105802",
+          "persistMs": 4692864,
+          "sinceMs": 1778038204000,
+          "measuredAtMs": 1794240020851
+        }
+      },
+      "eth:ethereum": {
+        "custody": [
+          "0x2cff890f0378a11913b6129b2e97417a2c302680"
+        ],
+        "hotWallets": [
+          "0x2cff890f0378a11913b6129b2e97417a2c302680"
+        ],
+        "nearContract": "eth.omft.near"
+      },
+      "usdc:ethereum": {
+        "custody": [
+          "0x2cff890f0378a11913b6129b2e97417a2c302680"
+        ],
+        "hotWallets": [
+          "0x2cff890f0378a11913b6129b2e97417a2c302680"
+        ],
+        "token": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+        "nearContract": "eth-0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.omft.near"
+      },
+      "sol:solana": {
+        "custody": [
+          "DuSs7rCr7oTLHjM29QQ8NwDViaahTU58qqxaJVyAkgbn",
+          "6tckHFBpiJ8YgYN8FUskvtvTpXQZ55g5LHeo1kvELoDQ"
+        ],
+        "hotWallets": [
+          "DuSs7rCr7oTLHjM29QQ8NwDViaahTU58qqxaJVyAkgbn",
+          "6tckHFBpiJ8YgYN8FUskvtvTpXQZ55g5LHeo1kvELoDQ"
+        ],
+        "nearContract": "sol.omft.near",
+        "issuerAccounts": [
+          "sol.omft.near",
+          "2d41f68af1207ee6b96d5002bf60671686facefb5a50e69e7a8aff2431dedc56"
+        ]
+      },
+      "usdt:bsc": {
+        "custody": [
+          "0x233c5370ccfb3cd7409d9a3fb98ab94de94cb4cd"
+        ],
+        "hotWallets": [
+          "0x233c5370ccfb3cd7409d9a3fb98ab94de94cb4cd"
+        ],
+        "token": "0x55d398326f99059ff775485246999027b3197955",
+        "nearContract": "v2_1.omni.hot.tg",
+        "mtTokenId": "56_2CMMyVTGZkeyNZTSvS5sarzfir6g"
+      },
+      "bnb:bsc": {
+        "custody": [
+          "0x233c5370ccfb3cd7409d9a3fb98ab94de94cb4cd"
+        ],
+        "hotWallets": [
+          "0x233c5370ccfb3cd7409d9a3fb98ab94de94cb4cd"
+        ],
+        "nearContract": "v2_1.omni.hot.tg",
+        "mtTokenId": "56_11111111111111111111"
+      },
+      "ltc:litecoin": {
+        "custody": [
+          "LQjEMkuiA2pCwFeUPwsu6ktzUubBVLsahX"
+        ],
+        "hotWallets": [
+          "LQjEMkuiA2pCwFeUPwsu6ktzUubBVLsahX"
+        ],
+        "nearContract": "ltc.omft.near",
+        "issuerAccounts": [
+          "ltc.omft.near",
+          "omft.near"
+        ],
+        "partial": {
+          "baselineGap": "16270351501",
+          "smallGap": "521187683",
+          "alarmGap": "166342962524",
+          "persistMs": 1800000,
+          "sinceMs": 1794141636000,
+          "measuredAtMs": 1794240131021
+        }
+      }
+    }
+  }
+}

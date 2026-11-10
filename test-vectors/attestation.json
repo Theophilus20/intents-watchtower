@@ -1,0 +1,100 @@
+{
+  "contract_id": "watchtower.near",
+  "epoch_ms": 60000,
+  "watchers": [
+    {
+      "account_id": "w1.watchtower.near",
+      "public_key": "ed25519:AKnL4NNf3DGWZJS6cPknBuEGnVsV4A4m5tgebLHaRSZ9",
+      "seed_hex": "0101010101010101010101010101010101010101010101010101010101010101"
+    },
+    {
+      "account_id": "w2.watchtower.near",
+      "public_key": "ed25519:9hSR6S7WPtxmTojgo6GG3k4yDPecgJY292j7xrsUGWBu",
+      "seed_hex": "0202020202020202020202020202020202020202020202020202020202020202"
+    },
+    {
+      "account_id": "w3.watchtower.near",
+      "public_key": "ed25519:GyGKxMyg1p9SsHfm15MkNUu1u9TN2JtTspcdmrtGUdse",
+      "seed_hex": "0303030303030303030303030303030303030303030303030303030303030303"
+    }
+  ],
+  "cases": [
+    {
+      "name": "green-quorum",
+      "route_id": "btc:bitcoin->usdc:near",
+      "report": {
+        "route_id": "btc:bitcoin->usdc:near",
+        "epoch": 29843520,
+        "status": "green",
+        "score": 100,
+        "capacity_usd": 250000,
+        "reasons": [],
+        "report_hash": "fc4e62746c5d934ef729ba6f51cc2110177dc50162e0aa9627fcb17f2ef5ac32"
+      },
+      "message": "iwt:v2|watchtower.near|btc:bitcoin->usdc:near|29843520|green|100|250000||fc4e62746c5d934ef729ba6f51cc2110177dc50162e0aa9627fcb17f2ef5ac32",
+      "attestations": [
+        {
+          "watcher_id": "w1.watchtower.near",
+          "signature": "qiJRiYxXDvE60CkS7ewSWMgMYzVO5knZZSFacxhANsGuFZelRNC7nG6xvwm5e0VQdP/E10rD1tkmdGL8jwtKCQ=="
+        },
+        {
+          "watcher_id": "w2.watchtower.near",
+          "signature": "NDEfiZVQa84lRF8cq1a1AaCJhLMzDVNqR+K4ZZtvt+Cv0S6cs+TJTMo6oskzIiQh3FBCKfuY/KEMpv0dDCBYDg=="
+        }
+      ]
+    },
+    {
+      "name": "red-ghost-credit",
+      "route_id": "usdt:bsc->usdc:near",
+      "report": {
+        "route_id": "usdt:bsc->usdc:near",
+        "epoch": 29843520,
+        "status": "red",
+        "score": 18,
+        "capacity_usd": 0,
+        "reasons": [
+          "GHOST_CREDIT_WITHDRAWN:usdt:bsc",
+          "FRESH_ACCOUNT_EXIT:usdt:bsc"
+        ],
+        "report_hash": "0f99f2a2e175b05c8b4b43810ef380a1d5057f7a6cd91ee55f632f841486b50b"
+      },
+      "message": "iwt:v2|watchtower.near|usdt:bsc->usdc:near|29843520|red|18|0|GHOST_CREDIT_WITHDRAWN:usdt:bsc,FRESH_ACCOUNT_EXIT:usdt:bsc|0f99f2a2e175b05c8b4b43810ef380a1d5057f7a6cd91ee55f632f841486b50b",
+      "attestations": [
+        {
+          "watcher_id": "w3.watchtower.near",
+          "signature": "Iks7Jzuylhw6xYM90+xM5kZeUk2/wNoF7DaGWpOSJeFqV20l9qdvW+9ThK5TZjanN3gQ8ecDmNed4SPCPcgCBg=="
+        }
+      ]
+    },
+    {
+      "name": "amber-concentrated",
+      "route_id": "ltc:litecoin->btc:bitcoin",
+      "report": {
+        "route_id": "ltc:litecoin->btc:bitcoin",
+        "epoch": 29843520,
+        "status": "amber",
+        "score": 72,
+        "capacity_usd": 12000,
+        "reasons": [
+          "SOLVER_CONCENTRATED:ltc:litecoin->btc:bitcoin"
+        ],
+        "report_hash": "95618b954c3ad7dda29ceac7881acb2e9c654e4d2f641600557221c9e0a01f39"
+      },
+      "message": "iwt:v2|watchtower.near|ltc:litecoin->btc:bitcoin|29843520|amber|72|12000|SOLVER_CONCENTRATED:ltc:litecoin->btc:bitcoin|95618b954c3ad7dda29ceac7881acb2e9c654e4d2f641600557221c9e0a01f39",
+      "attestations": [
+        {
+          "watcher_id": "w1.watchtower.near",
+          "signature": "cNDOcoLUssLlHORpnKdb9W+e1ni4OhhsqO/MaEFqts6DvCaem/hFDJscDgTxC9wBR9su8cFdWyTJ5YBHtelzDA=="
+        },
+        {
+          "watcher_id": "w2.watchtower.near",
+          "signature": "iVG37iXZtL/9/v3FYUntTaVGhK05jQbioJh2AZ5tT+jigi0b+OITYR5xLQcaBmGUKgLOm9My4gdHzudQWh+hCw=="
+        },
+        {
+          "watcher_id": "w3.watchtower.near",
+          "signature": "MyyEIDTyc/hLD3FarzUBoyF+f3nA3fwlL7gkeu7Pj00ojFheW96vnGaY7FiZioAa8hjpjQS+HR2JkeiReCgODQ=="
+        }
+      ]
+    }
+  ]
+}

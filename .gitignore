@@ -1,0 +1,11 @@
+node_modules/
+contracts/watchtower/target/
+apps/status/dist/
+data/
+.env
+watchtower.config.json
+*.log
+.DS_Store
+packages/sdk/dist/
+packages/mcp/dist/
+*.bak

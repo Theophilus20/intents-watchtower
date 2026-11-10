@@ -1,0 +1,39 @@
+{
+  "_comment": "Live watcher config. Copy to watchtower.config.json. Custody addresses and bridge contracts must be filled from public bridge documentation or traced on-chain; see docs/RUNBOOK.md#finding-custody-addresses.",
+  "contractId": "watchtower.testnet",
+  "rpcUrl": "https://test.rpc.fastnear.com",
+  "live": {
+    "near": {
+      "rpcUrl": "https://free.rpc.fastnear.com",
+      "neardataUrl": "https://mainnet.neardata.xyz/v0",
+      "intentsContract": "intents.near"
+    },
+    "oneClickUrl": "https://1click.chaindefuser.com",
+    "chains": {
+      "bitcoin": { "kind": "esplora", "url": "https://mempool.space/api" },
+      "ethereum": { "kind": "evm", "url": "https://ethereum-rpc.publicnode.com" },
+      "bsc": { "kind": "evm", "url": "https://bsc-rpc.publicnode.com" },
+      "solana": { "kind": "solana", "url": "https://api.mainnet-beta.solana.com" },
+      "litecoin": { "kind": "esplora", "url": "https://litecoinspace.org/api" }
+    },
+    "assets": {
+      "btc:bitcoin": {
+        "nearContract": "btc.omft.near",
+        "custody": ["<bc1… custody address 1>", "<bc1… custody address 2>"],
+        "hotWallets": []
+      },
+      "eth:ethereum": {
+        "nearContract": "eth.omft.near",
+        "custody": ["<0x… custody address>"],
+        "hotWallets": ["<0x… hot wallet>"]
+      },
+      "usdc:ethereum": {
+        "nearContract": "eth-0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.omft.near",
+        "token": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+        "custody": ["<0x… custody address>"],
+        "hotWallets": ["<0x… hot wallet>"]
+      }
+    },
+    "concurrency": 8
+  }
+}

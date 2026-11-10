@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "npm ci --legacy-peer-deps",
+  "buildCommand": "WATCHTOWER_LIVE=testnet:watchtower.intentswatch-ade.testnet WATCHTOWER_CONFIG=config/public.config.json npm run app",
+  "outputDirectory": "apps/status/dist/site"
+}

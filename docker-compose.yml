@@ -1,0 +1,31 @@
+# Three independent watchers. In production each runs on a different machine, with different
+# RPC providers, operated by different people. Here they share a host for the demo.
+services:
+  watcher-1: &watcher
+    build: .
+    restart: unless-stopped
+    command: ["run", "--config", "/config/watchtower.config.json", "--submit"]
+    volumes: ["./watchtower.config.json:/config/watchtower.config.json:ro", "./data/w1:/data"]
+    environment:
+      WATCHER_ACCOUNT_ID: ${W1_ACCOUNT_ID}
+      WATCHER_SECRET_KEY: ${W1_SECRET_KEY}
+      RELAYER_ACCOUNT_ID: ${RELAYER_ACCOUNT_ID:-}
+      RELAYER_SECRET_KEY: ${RELAYER_SECRET_KEY:-}
+      WATCHTOWER_PGLITE_DIR: /data
+      NEAR_AI_API_KEY: ${NEAR_AI_API_KEY:-}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID:-}
+  watcher-2:
+    <<: *watcher
+    volumes: ["./watchtower.config.json:/config/watchtower.config.json:ro", "./data/w2:/data"]
+    environment:
+      WATCHER_ACCOUNT_ID: ${W2_ACCOUNT_ID}
+      WATCHER_SECRET_KEY: ${W2_SECRET_KEY}
+      WATCHTOWER_PGLITE_DIR: /data
+  watcher-3:
+    <<: *watcher
+    volumes: ["./watchtower.config.json:/config/watchtower.config.json:ro", "./data/w3:/data"]
+    environment:
+      WATCHER_ACCOUNT_ID: ${W3_ACCOUNT_ID}
+      WATCHER_SECRET_KEY: ${W3_SECRET_KEY}
+      WATCHTOWER_PGLITE_DIR: /data

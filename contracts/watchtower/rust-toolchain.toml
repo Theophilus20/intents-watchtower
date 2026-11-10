@@ -1,0 +1,5 @@
+# The NEAR SDK (near-sdk 5.30) needs Rust 1.95 or newer. Pinning the exact version the tests run on
+# means everyone builds the same contract, whatever Rust their computer defaults to.
+[toolchain]
+channel = "1.97.0"
+targets = ["wasm32-unknown-unknown"]

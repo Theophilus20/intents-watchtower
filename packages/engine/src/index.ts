@@ -1,0 +1,12 @@
+export { RiskEngine, verdictHash, verifyVerdict } from "./engine.ts";
+export { defaultConfig, ENGINE_VERSION, type EngineConfig } from "./config.ts";
+export { emptyState, serializeState, deserializeState, GENESIS_DIGEST, type EngineState } from "./state.ts";
+export { canMatch } from "./matcher.ts";
+export { scoreRoute, applyHysteresis, orderReasons, capScore } from "./scorer.ts";
+export { checkBacking } from "./checks/backing.ts";
+export { checkGhost } from "./checks/ghost.ts";
+export { checkAnomaly } from "./checks/anomaly.ts";
+export { checkConcentration } from "./checks/concentration.ts";
+export { checkChain, checkDepeg } from "./checks/chain.ts";
+export { makeCtx, type Ctx } from "./context.ts";
+export { routeCapacity, preflight, alternativesFor, roundDown, solverDepthUsd, payoutLiquidityUsd, DEFAULT_CAPACITY_USD, type Preflight, type Decision, type RouteState } from "./capacity.ts";

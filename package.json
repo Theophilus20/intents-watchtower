@@ -1,0 +1,64 @@
+{
+  "name": "intents-watchtower",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The smoke alarm for NEAR Intents. Proof of backing, ghost-credit detection and an on-chain is_safe(route) circuit breaker.",
+  "license": "MIT",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test:contract": "cd contracts/watchtower && cargo test",
+    "build:wasm": "cd contracts/watchtower && cargo near build non-reproducible-wasm",
+    "build:status": "tsx apps/status/build.ts",
+    "build:sdk": "tsx packages/sdk/build.ts",
+    "vectors": "tsx packages/watcher/src/cli.ts vectors --out test-vectors/attestation.json",
+    "replay": "tsx packages/watcher/src/cli.ts replay",
+    "simulate": "tsx packages/watcher/src/cli.ts simulate",
+    "watch": "tsx packages/watcher/src/cli.ts run",
+    "cli": "tsx packages/watcher/src/cli.ts",
+    "ci": "npm run typecheck && npm test && npm run test:contract",
+    "demo": "tsx packages/watcher/src/cli.ts replay oct-2026-ghost-credit",
+    "demo:all": "tsx packages/watcher/src/cli.ts replay all",
+    "demo:whale": "tsx packages/watcher/src/cli.ts replay whale-day",
+    "demo:agent": "tsx packages/watcher/src/cli.ts agent-demo",
+    "demo:network": "tsx packages/watcher/src/cli.ts simulate --scenario apr-2026-litecoin-zero-day --minutes 45",
+    "app": "tsx apps/status/build.ts",
+    "demo:french": "tsx packages/watcher/src/cli.ts replay oct-2026-ghost-credit --lang fr",
+    "mcp": "tsx packages/mcp/src/main.ts",
+    "build:mcp": "tsx packages/mcp/build.ts",
+    "doctor": "tsx packages/watcher/src/cli.ts doctor",
+    "deploy": "tsx scripts/deploy.ts",
+    "watch:dry": "tsx packages/watcher/src/cli.ts run --config watchtower.config.json --once --watcher 1",
+    "watch:live": "tsx packages/watcher/src/cli.ts run --config watchtower.config.json --submit",
+    "watch:1": "tsx packages/watcher/src/cli.ts run --config watchtower.config.json --submit --watcher 1",
+    "watch:2": "tsx packages/watcher/src/cli.ts run --config watchtower.config.json --submit --watcher 2",
+    "watch:3": "tsx packages/watcher/src/cli.ts run --config watchtower.config.json --submit --watcher 3",
+    "relayer": "tsx packages/watcher/src/cli.ts relayer",
+    "custody": "tsx packages/watcher/src/cli.ts custody",
+    "custody:apply": "tsx packages/watcher/src/cli.ts custody --apply",
+    "config:public": "tsx scripts/public-config.ts"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^30.0.0",
+    "@types/node": "^22.10.0",
+    "esbuild": "^0.28.2",
+    "jsdom": "^26.1.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.0"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "^0.5.15",
+    "@noble/ed25519": "^3.2.0",
+    "@noble/hashes": "^2.4.0"
+  }
+}

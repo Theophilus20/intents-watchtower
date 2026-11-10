@@ -1,0 +1,9 @@
+{
+  "name": "@watchtower/status",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "preact": "^10.29.8"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "@watchtower/mcp",
+  "version": "1.0.0",
+  "description": "MCP server: lets any AI agent ask Intents Watchtower whether a NEAR Intents swap is safe, and how much, before it sends.",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "watchtower-mcp": "./dist/watchtower-mcp.mjs"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {}
+}

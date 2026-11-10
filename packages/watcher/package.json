@@ -1,0 +1,12 @@
+{
+  "name": "@watchtower/watcher",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "near-api-js": "^7.4.0"
+  }
+}

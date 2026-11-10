@@ -1,0 +1,17 @@
+{
+  "name": "@watchtower/sdk",
+  "version": "1.0.0",
+  "description": "One call before every swap: is this NEAR Intents route safe right now?",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/index.ts",
+    "./badge": "./src/badge.ts"
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
+  "dependencies": {}
+}

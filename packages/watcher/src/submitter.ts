@@ -53,7 +53,10 @@ export class NearSubmitter implements Submitter {
         contractId: this.opts.contractId,
         methodName: "submit_reports",
         args: { reports },
-        gas: 300n * 10n ** 12n, // unused gas is refunded
+        // Unused gas is refunded, but NEAR makes the payer hold the attached gas at an inflated price
+        // before the call runs: 300 Tgas needed about 3 NEAR on hand, so a payer with less stalled
+        // every batch. 100 Tgas for 4 reports keeps the 25 Tgas per report the 12-in-300 batches had.
+        gas: BATCH_TGAS * 10n ** 12n,
       });
       out.push(...(res as unknown as (SubmitOutcome | null)[]));
     }
@@ -61,8 +64,9 @@ export class NearSubmitter implements Submitter {
   }
 }
 
-/** Reports per submit_reports call; the contract accepts up to 32, 16 keeps each call well under the gas limit. */
-const BATCH = 16;
+/** Reports per submit_reports call (the contract accepts up to 32) and the gas attached to each call. */
+const BATCH = 4;
+const BATCH_TGAS = 100n;
 
 /**
  * Relayer mode: collect attestations from several watchers for the same (route, epoch, hash)

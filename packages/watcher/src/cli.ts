@@ -21,7 +21,7 @@ import { defaultConfig } from "@watchtower/engine";
 import { explain, type Lang } from "@watchtower/explainer";
 import { SCENARIOS, World, getScenario, runScenario } from "@watchtower/replay";
 import { Watchtower, withWatchtower, RouteUnsafeError } from "@watchtower/sdk";
-import { LiveCollector, NearRpc, fetchJson, httpStats, realAddresses, supplySource, type LiveConfig } from "@watchtower/collectors";
+import { LiveCollector, NearRpc, fetchJson, httpStats, jsonRpc, realAddresses, supplySource, upgradeNearRpc, type LiveConfig } from "@watchtower/collectors";
 import { FileBlockCache } from "./blockcache.ts";
 import { AlertManager, ConsoleSink } from "./alerts.ts";
 import { LocalNetwork } from "./network.ts";
@@ -32,7 +32,7 @@ import { findOrigin, printOrigin } from "./origin.ts";
 import { DEFAULT_LIVE } from "./doctor.ts";
 
 /** Printed by the custody finder, so its output shows which version produced it. */
-const BUILD = "2026-11-10.3";
+const BUILD = "2026-11-13.1";
 import { openPglite } from "@watchtower/store";
 import { sendTelegram } from "@watchtower/bot";
 
@@ -203,6 +203,7 @@ async function runLive(): Promise<void> {
   collector.setBlockCache(blockCache);
   let lastBytes = httpStats.bytes;
   let rounds = 0;
+  let gasSeen: { atMs: number; near: number } | undefined;
   const alerts = new AlertManager([new ConsoleSink()], { langs: ["en"], ai: process.env.NEAR_AI_API_KEY ? { apiKey: process.env.NEAR_AI_API_KEY } : undefined });
   // Every bridge deposit and withdrawal seen on NEAR, for `npm run custody` to trace to the bridge's wallets.
   const eventsFile = `data/bridge-events-${n ?? wid.split(".")[0]}.jsonl`;
@@ -262,6 +263,24 @@ async function runLive(): Promise<void> {
     if (events.length) console.log(dim(`  bridge activity: ${events.filter((e) => e.kind === "deposit").length} deposits, ${events.filter((e) => e.kind === "withdrawal").length} withdrawals (saved for npm run custody)`));
     const sent = res.attestations.filter((a) => a.outcome).length;
     if (submitter && sent) console.log(dim(`  sent ${sent} verdict${sent === 1 ? "" : "s"} to ${file.contractId}`));
+    if (submitter && (rounds - 1) % 60 === 0) await logGasBalance();
+  }
+
+  // The gas account pays for every verdict. Log what it holds once an hour, so an account running
+  // dry shows in the logs days before verdicts stop.
+  async function logGasBalance(): Promise<void> {
+    try {
+      const acc = await jsonRpc<{ amount: string }>(upgradeNearRpc(file.rpcUrl), "query", { request_type: "view_account", finality: "final", account_id: payer });
+      const near = Number(BigInt(acc.amount) / 10n ** 20n) / 1e4;
+      const now = Date.now();
+      const perDay = gasSeen && gasSeen.near > near ? ((gasSeen.near - near) / (now - gasSeen.atMs)) * 86_400_000 : 0;
+      gasSeen = { atMs: now, near };
+      const rate = perDay ? `; spending about ${perDay.toFixed(2)} NEAR a day, enough for about ${Math.floor(near / perDay)} days` : "";
+      const line = `  gas account ${payer} holds ${near.toFixed(4)} NEAR${rate}`;
+      console.log(near < 3 ? yellow(`${line}. Top it up soon: every verdict is a transaction.`) : dim(line));
+    } catch (e) {
+      console.log(dim(`  couldn't read the gas account's balance: ${String((e as Error)?.message ?? e).slice(0, 120)}`));
+    }
   }
 }
 
